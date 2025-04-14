@@ -250,8 +250,8 @@ class WavLMAttention(nn.Module):
         return attn_output, attn_weights
 
     def compute_bias(self, query_length: int, key_length: int) -> torch.FloatTensor:
-        context_position = torch.arange(query_length, dtype=torch.long)[:, None]
-        memory_position = torch.arange(key_length, dtype=torch.long)[None, :]
+        context_position = torch.arange(query_length, dtype=torch.long, device=self.rel_attn_embed.weight.device)[:, None]
+        memory_position = torch.arange(key_length, dtype=torch.long, device=self.rel_attn_embed.weight.device)[None, :]
         relative_position = memory_position - context_position
         relative_position_bucket = self._relative_positions_bucket(relative_position)
         relative_position_bucket = relative_position_bucket.to(self.rel_attn_embed.weight.device)
